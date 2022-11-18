@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
   </Properties>
@@ -140,27 +140,9 @@
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="5">
-                <Column editable="true" title="Student ID" type="java.lang.String">
-                  <Data value="000124"/>
-                  <Data value="000125"/>
-                  <Data value="000126"/>
-                  <Data value="000127"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="true" title="Student Name" type="java.lang.String">
-                  <Data value="Nguyen Ngoc Minh"/>
-                  <Data value="Nguyen Dinh Tung"/>
-                  <Data value="Nguyen Anh Kiet"/>
-                  <Data value="Nguyen Minh Khoi"/>
-                  <Data value="null"/>
-                </Column>
-                <Column editable="true" title="Department ID" type="java.lang.String">
-                  <Data value="CNTT"/>
-                  <Data value="QTKD"/>
-                  <Data value="DTVT"/>
-                  <Data value="CNDPT"/>
-                  <Data value="null"/>
-                </Column>
+                <Column editable="true" title="Student ID" type="java.lang.Object"/>
+                <Column editable="true" title="Student Name" type="java.lang.Object"/>
+                <Column editable="true" title="Department ID" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
