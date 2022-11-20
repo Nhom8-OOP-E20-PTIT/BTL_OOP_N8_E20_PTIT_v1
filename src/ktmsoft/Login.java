@@ -4,7 +4,14 @@
  * and open the template in the editor.
  */
 package ktmsoft;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import ktmsoft.*;
+import ktmsoft.Menu_Admin;
 /**
  *
  * @author nguyenanhkiet
@@ -16,6 +23,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -38,7 +46,6 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setText("Username");
 
-        jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -47,9 +54,12 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Password");
 
-        jPasswordField1.setText("jPasswordField1");
-
         jButton1.setText("Login");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,6 +100,60 @@ public class Login extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+        String cmd = "SELECT * FROM Student";
+        ResultSet rs = dbInfo.dbquery(cmd);
+        try {
+            boolean ok = true;
+            while(rs.next()){
+                if(rs.getString("id").equals(username) && rs.getString("password").equals(password)){
+                    ok = false;
+                    JOptionPane.showMessageDialog(null, "Login Successfully!");
+                    String role = rs.getString("role");
+                    if(role.equals("ad")){
+                        dbInfo.setUsername(rs.getString("id"));
+                        dbInfo.setPassword(password);
+                        Menu_Admin m = new Menu_Admin();
+                        m.setVisible(true);
+                        m.setLocationRelativeTo(null);
+                        this.setVisible(false);
+                    }
+                    else if(role.equals("sv")){ // role lưu là st, không phải sv
+                        dbInfo.setUsername(rs.getString("id"));
+                        dbInfo.setPassword(password);
+                        Menu_Student m = new Menu_Student();
+                        m.setVisible(true);
+                        m.setLocationRelativeTo(null);
+                        this.setVisible(false);
+                    }
+                    else if(role.equals("le")){
+                        dbInfo.setUsername(rs.getString("id"));
+                        dbInfo.setPassword(password);
+                        Menu_Lecturer m = new Menu_Lecturer();
+                        m.setVisible(true);
+                        m.setLocationRelativeTo(null);
+                        this.setVisible(false);
+                    }
+                    else if(role.equals("sp")){
+                        dbInfo.setUsername(rs.getString("id"));
+                        dbInfo.setPassword(password);
+                        Menu_Supervisor m = new Menu_Supervisor();
+                        m.setVisible(true);
+                        m.setLocationRelativeTo(null);
+                        this.setVisible(false);
+                    }
+                    return;
+                }
+            }
+            if(ok)  JOptionPane.showMessageDialog(null, "Login Failed");
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
