@@ -4,10 +4,16 @@
  * and open the template in the editor.
  */
 package ktmsoft;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import ktmsoft.dbInfo;
 /**
@@ -171,6 +177,11 @@ public class Lecturer_Management extends javax.swing.JDialog {
         });
 
         jButton4.setText("Import");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Sort By");
 
@@ -251,7 +262,7 @@ public class Lecturer_Management extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -355,6 +366,37 @@ public class Lecturer_Management extends javax.swing.JDialog {
         }
         getAll();
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".CSV file", "csv");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        File location = null;
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            location = chooser.getSelectedFile();
+        }
+        
+        try {
+            Scanner sc = new Scanner(location);
+            while(sc.hasNext()){
+                String s = sc.nextLine();
+                String st[] = s.trim().split(",");
+                String lec_id = st[0];
+                String lec_name = st[1];
+                String dept_id = st[2];
+                String cmd = "INSERT INTO lecturer VALUES ('" + lec_id + "' , '" + lec_name + "' , '" + dept_id + "');" ;
+                dbInfo.dbexec(cmd);
+                lecturer stim = new lecturer(lec_id, lec_name, dept_id);
+                list.add(stim);                
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Lecturer_Management.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        getAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

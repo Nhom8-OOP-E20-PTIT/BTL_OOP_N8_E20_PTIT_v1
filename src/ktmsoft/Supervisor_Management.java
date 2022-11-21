@@ -5,10 +5,16 @@
  */
 package ktmsoft;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import ktmsoft.dbInfo;
 public class Supervisor_Management extends javax.swing.JDialog {
@@ -152,6 +158,11 @@ public class Supervisor_Management extends javax.swing.JDialog {
         });
 
         jButton4.setText("Import");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Sort By");
 
@@ -316,6 +327,36 @@ public class Supervisor_Management extends javax.swing.JDialog {
         }
         getAll();        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".CSV file", "csv");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        File location = null;
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            location = chooser.getSelectedFile();
+        }
+        
+        try {
+            Scanner sc = new Scanner(location);
+            while(sc.hasNext()){
+                String s = sc.nextLine();
+                String st[] = s.trim().split(",");
+                String su_id = st[0];
+                String su_name = st[1];
+                String cmd = "INSERT INTO supervisor VALUES ('" + su_id + "' , '" + su_name + "');" ;
+                dbInfo.dbexec(cmd);
+                supervisor stim = new supervisor(su_id, su_name);
+                list.add(stim);                
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Supervisor_Management.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        getAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
