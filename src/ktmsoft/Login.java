@@ -102,10 +102,12 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        String DB_NAME = "user";
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
         String username = jTextField1.getText();
         String password = jPasswordField1.getText();
-        String cmd = "SELECT * FROM Student";
+        String cmd = "SELECT * FROM userinfo";
         ResultSet rs = dbInfo.dbquery(cmd);
         try {
             boolean ok = true;
@@ -122,7 +124,7 @@ public class Login extends javax.swing.JFrame {
                         m.setLocationRelativeTo(null);
                         this.setVisible(false);
                     }
-                    else if(role.equals("sv")){ // role lưu là st, không phải sv
+                    else if(role.equals("st")){ // role lưu là st, không phải sv
                         dbInfo.setUsername(rs.getString("id"));
                         dbInfo.setPassword(password);
                         Menu_Student m = new Menu_Student();
@@ -138,7 +140,7 @@ public class Login extends javax.swing.JFrame {
                         m.setLocationRelativeTo(null);
                         this.setVisible(false);
                     }
-                    else if(role.equals("sp")){
+                    else if(role.equals("su")){
                         dbInfo.setUsername(rs.getString("id"));
                         dbInfo.setPassword(password);
                         Menu_Supervisor m = new Menu_Supervisor();

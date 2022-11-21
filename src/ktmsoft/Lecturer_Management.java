@@ -4,21 +4,78 @@
  * and open the template in the editor.
  */
 package ktmsoft;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.dbInfo;
 /**
  *
  * @author nguyenanhkiet
  */
 public class Lecturer_Management extends javax.swing.JDialog {
+    static class lecturer{
+        private String lec_id;
+        private String lec_name;
+        private String dept_id;
+        public lecturer(String lec_id, String lec_name, String dept_id){
+            this.lec_id = lec_id;
+            this.lec_name = lec_name;
+            this.dept_id = dept_id;
+        }
 
-    /**
-     * Creates new form Student_Management
-     */
+        public String getLec_id() {
+            return lec_id;
+        }
+
+        public String getLec_name() {
+            return lec_name;
+        }
+
+        public String getDept_id() {
+            return dept_id;
+        }
+        
+    }
+    private ArrayList<lecturer> list;
+    DefaultTableModel model;
+    String DB_NAME = "info";    
     public Lecturer_Management(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        list = ReadAll();
         initComponents();
+        model = (DefaultTableModel) jTable1.getModel();
+        getAll();
     }
-
+    public ArrayList ReadAll(){
+        ArrayList<lecturer> result = new ArrayList<>();
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        try{
+            String cmd = "SELECT * FROM lecturer";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String lec_id = rs.getString("lec_id");
+                String lec_name = rs.getString("lec_name");
+                String dept_id = rs.getString("dept_id");
+                lecturer st = new lecturer(lec_id, lec_name, dept_id);
+                result.add(st);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+        
+    }
+    public void getAll(){
+        model.setRowCount(0);
+        for(lecturer s : list){
+            model.addRow(new Object[]{
+                s.getLec_id(), s.getLec_name(), s.getDept_id()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,6 +100,8 @@ public class Lecturer_Management extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -54,24 +113,16 @@ public class Lecturer_Management extends javax.swing.JDialog {
         jTable1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"000124", "Nguyen Ngoc Minh", "CNTT"},
-                {"000125", "Nguyen Dinh Tung", "QTKD"},
-                {"000126", "Nguyen Anh Kiet", "DTVT"},
-                {"000127", "Nguyen Minh Khoi", "CNDPT"},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
                 {null, null, null}
             },
             new String [] {
                 "Lecturer ID", "Lecturer Name", "Department ID"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         jScrollPane1.setViewportView(jTable1);
 
         jLabel3.setText("Lecturer Name");
@@ -98,7 +149,7 @@ public class Lecturer_Management extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setText("Add");
+        jButton1.setText("Save");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -106,31 +157,56 @@ public class Lecturer_Management extends javax.swing.JDialog {
         });
 
         jButton2.setText("Delete");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Edit");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Import");
+
+        jLabel2.setText("Sort By");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name Ascending", "Name Descending", "ID Ascending", "ID Descending", "Department Ascending", "Department Descending" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(372, 372, 372)
+                .addComponent(jLabel1)
+                .addGap(153, 153, 153))
+            .addGroup(layout.createSequentialGroup()
                 .addGap(170, 170, 170)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7))
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel2))
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextField1)
                             .addComponent(jTextField2)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField3)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -138,10 +214,6 @@ public class Lecturer_Management extends javax.swing.JDialog {
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
                 .addGap(171, 171, 171))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(372, 372, 372)
-                .addComponent(jLabel1)
-                .addGap(153, 153, 153))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,14 +232,18 @@ public class Lecturer_Management extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -175,7 +251,7 @@ public class Lecturer_Management extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
@@ -194,8 +270,91 @@ public class Lecturer_Management extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        String lec_name = jTextField1.getText();
+        String lec_id = jTextField2.getText();
+        String dept_id = jTextField3.getText();
+        if(lec_name == ""){
+            JOptionPane.showMessageDialog(null, "Lecturer name cannot be empty");
+        }else if(lec_id == ""){
+            JOptionPane.showMessageDialog(null, "Lecturer ID cannot be empty");
+        }else if(dept_id == ""){
+            JOptionPane.showMessageDialog(null, "Department ID cannot be empty");
+        }        
+        String cmd = "INSERT INTO lecturer VALUES ('" + lec_id + "' , '" + lec_name + "' , '" + dept_id + "');" ;
+        dbInfo.dbexec(cmd);
+        lecturer stnew = new lecturer(lec_id, lec_name, dept_id);
+        list.add(stnew);
+        getAll();
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int del_index = jTable1.getSelectedRow();
+        if(del_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to delete");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to delete");
+        }else{
+            lecturer st_del = list.get(del_index);
+            list.remove(del_index);
+            dbInfo.setDbname(DB_NAME);
+            dbInfo.setDburl(DB_NAME);
+            String cmd = "DELETE FROM lecturer WHERE lec_id = '" + st_del.lec_id + "';";
+            dbInfo.dbexec(cmd);
+            getAll();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");        
+        int edit_index = jTable1.getSelectedRow();
+        if(edit_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to edit");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to edit");
+        }else{
+            dbInfo.setDbname(DB_NAME);
+            dbInfo.setDburl(DB_NAME);            
+            lecturer st_edit = list.get(edit_index);
+            list.remove(edit_index);
+            String cmd = "DELETE FROM lecturer WHERE lec_id = '" + st_edit.lec_id + "';";
+            dbInfo.dbexec(cmd);
+            jTextField1.setText(st_edit.lec_name);
+            jTextField2.setText(st_edit.lec_id);
+            jTextField3.setText(st_edit.dept_id);
+        } 
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        int selected_index = jComboBox1.getSelectedIndex();
+        if(selected_index == 0){
+            list.sort(Comparator.comparing(lecturer::getLec_name));
+            
+        }else if(selected_index == 1){
+            list.sort(Comparator.comparing(lecturer::getLec_name).reversed());
+                       
+        }else if(selected_index == 2){
+            list.sort(Comparator.comparing(lecturer::getLec_id));
+                        
+        }else if(selected_index == 3){
+            list.sort(Comparator.comparing(lecturer::getLec_id).reversed());
+                     
+        }else if(selected_index == 4){
+            list.sort(Comparator.comparing(lecturer::getDept_id));
+                    
+        }else if(selected_index == 5){
+            list.sort(Comparator.comparing(lecturer::getDept_id).reversed());
+                        
+        }
+        getAll();
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -245,7 +404,9 @@ public class Lecturer_Management extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

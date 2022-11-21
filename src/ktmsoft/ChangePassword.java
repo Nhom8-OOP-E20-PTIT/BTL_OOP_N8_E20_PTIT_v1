@@ -119,12 +119,15 @@ public class ChangePassword extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String DB_NAME = "user";
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
         String oldPassword = jPasswordField1.getText();
         String newPassword = jPasswordField2.getText();
         String passwordConfirmation = jPasswordField3.getText();
         if(oldPassword.equals(dbInfo.getPassword()) && newPassword.equals(passwordConfirmation)){
             dbInfo.setPassword(newPassword);
-            String updatePassword = "UPDATE Student SET password='"+newPassword + "' WHERE id='" +dbInfo.getUsername() + "'";
+            String updatePassword = "UPDATE userinfo SET password='"+newPassword + "' WHERE id='" +dbInfo.getUsername() + "'";
             dbInfo.dbexec(updatePassword);
             JOptionPane.showMessageDialog(null, "Change Password Successfully!");
         }
@@ -134,8 +137,6 @@ public class ChangePassword extends javax.swing.JDialog {
         else if(!newPassword.equals(passwordConfirmation)){
             JOptionPane.showMessageDialog(null, "newPassword differs from passwordConfirmation!");
         }
-        System.out.println(dbInfo.getUsername());
-        System.out.println(dbInfo.getPassword());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

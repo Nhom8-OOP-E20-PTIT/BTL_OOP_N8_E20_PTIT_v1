@@ -5,20 +5,68 @@
  */
 package ktmsoft;
 
-/**
- *
- * @author nguyenanhkiet
- */
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.dbInfo;
 public class Supervisor_Management extends javax.swing.JDialog {
+    static class supervisor{
+        private String su_id;
+        private String su_name;
 
-    /**
-     * Creates new form Student_Management
-     */
+        public supervisor(String su_id, String su_name) {
+            this.su_id = su_id;
+            this.su_name = su_name;
+        }
+
+        public String getSu_id() {
+            return su_id;
+        }
+
+        public String getSu_name() {
+            return su_name;
+        }       
+        
+    }
+    private ArrayList<supervisor> list;
+    DefaultTableModel model;
+    String DB_NAME = "info";     
     public Supervisor_Management(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        list = ReadAll();
         initComponents();
+        model = (DefaultTableModel) jTable1.getModel();
+        getAll();
     }
-
+    public ArrayList ReadAll(){
+        ArrayList<supervisor> result = new ArrayList<>();
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        try{
+            String cmd = "SELECT * FROM supervisor";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String su_id = rs.getString("su_id");
+                String su_name = rs.getString("su_name");
+                supervisor st = new supervisor(su_id, su_name);
+                result.add(st);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+        
+    }
+    public void getAll(){
+        model.setRowCount(0);
+        for(supervisor s : list){
+            model.addRow(new Object[]{
+                s.getSu_id(), s.getSu_name()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,6 +89,8 @@ public class Supervisor_Management extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -52,24 +102,16 @@ public class Supervisor_Management extends javax.swing.JDialog {
         jTable1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"000124", "Nguyen Ngoc Minh"},
-                {"000125", "Nguyen Dinh Tung"},
-                {"000126", "Nguyen Anh Kiet"},
-                {"000127", "Nguyen Minh Khoi"},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
                 {null, null}
             },
             new String [] {
                 "Supervisor ID", "Supervisor Name"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         jScrollPane1.setViewportView(jTable1);
 
         jLabel3.setText("Supervisor Name");
@@ -88,7 +130,7 @@ public class Supervisor_Management extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setText("Add");
+        jButton1.setText("Save");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -96,10 +138,29 @@ public class Supervisor_Management extends javax.swing.JDialog {
         });
 
         jButton2.setText("Delete");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Edit");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Import");
+
+        jLabel2.setText("Sort By");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Name Ascending", "Name Descending", "ID Ascending", "ID Descending" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -115,11 +176,14 @@ public class Supervisor_Management extends javax.swing.JDialog {
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
-                                    .addComponent(jTextField2)))
+                                    .addComponent(jTextField1)
+                                    .addComponent(jTextField2)
+                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 514, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
@@ -150,7 +214,11 @@ public class Supervisor_Management extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -176,8 +244,78 @@ public class Supervisor_Management extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        String su_name = jTextField1.getText();
+        String su_id = jTextField2.getText();
+        if(su_name == ""){
+            JOptionPane.showMessageDialog(null, "Supervisor name cannot be empty");
+        }else if(su_id == ""){
+            JOptionPane.showMessageDialog(null, "Supervisor ID cannot be empty");
+        }        
+        String cmd = "INSERT INTO supervisor VALUES ('" + su_id + "' , '" + su_name + "');" ;
+        dbInfo.dbexec(cmd);
+        supervisor stnew = new supervisor(su_id, su_name);
+        list.add(stnew);
+        getAll();
+        jTextField1.setText("");
+        jTextField2.setText("");        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int del_index = jTable1.getSelectedRow();
+        if(del_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to delete");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to delete");
+        }else{
+            supervisor st_del = list.get(del_index);
+            list.remove(del_index);
+            dbInfo.setDbname(DB_NAME);
+            dbInfo.setDburl(DB_NAME);
+            String cmd = "DELETE FROM supervisor WHERE su_id = '" + st_del.su_id + "';";
+            dbInfo.dbexec(cmd);
+            getAll();
+        }         // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        jTextField1.setText("");
+        jTextField2.setText("");
+        int edit_index = jTable1.getSelectedRow();
+        if(edit_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to edit");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to edit");
+        }else{
+            dbInfo.setDbname(DB_NAME);
+            dbInfo.setDburl(DB_NAME);            
+            supervisor st_edit = list.get(edit_index);
+            list.remove(edit_index);
+            String cmd = "DELETE FROM supervisor WHERE su_id = '" + st_edit.su_id + "';";
+            dbInfo.dbexec(cmd);
+            jTextField1.setText(st_edit.su_name);
+            jTextField2.setText(st_edit.su_id);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        int selected_index = jComboBox1.getSelectedIndex();
+        if(selected_index == 0){
+            list.sort(Comparator.comparing(supervisor::getSu_name));
+            
+        }else if(selected_index == 1){
+            list.sort(Comparator.comparing(supervisor::getSu_name).reversed());
+                       
+        }else if(selected_index == 2){
+            list.sort(Comparator.comparing(supervisor::getSu_id));
+                        
+        }else if(selected_index == 3){
+            list.sort(Comparator.comparing(supervisor::getSu_id).reversed());
+                     
+        }
+        getAll();        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,7 +367,9 @@ public class Supervisor_Management extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

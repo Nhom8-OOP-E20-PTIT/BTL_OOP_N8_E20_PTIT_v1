@@ -15,14 +15,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import static java.sql.DriverManager.getConnection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class dbInfo {
     public static String USERNAME = "";
     public static String USER_PASSWORD = "";
-    private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=SinhVien;" + "integratedSecurity=false;" + "encrypt=true;" + "trustServerCertificate=true";
-    private static String USER_NAME = "sa";
-    private static String PASSWORD = "123";
+//    private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=SinhVien;" + "integratedSecurity=false;" + "encrypt=true;" + "trustServerCertificate=true";
+//    private static String USER_NAME = "sa";
+//    private static String PASSWORD = "123";
+    private static String DB_NAME = "";
+    private static String DB_URL = "";
+    private static String USER_NAME = "ktm";
+    private static String PASSWORD = "123456@abc";
     public static void dbexec(String cmd){
         try{
             Connection ketnoi = getConnection(DB_URL, USER_NAME, PASSWORD);
@@ -32,6 +37,15 @@ public class dbInfo {
         }catch (Exception ex){
             ex.printStackTrace();
         }
+    }
+    public static String getDbname(){
+        return DB_NAME;
+    }
+    public static void setDbname(String dbname){
+        DB_NAME = dbname;
+    }
+    public static void setDburl(String dbname){
+        DB_URL = "jdbc:mysql://192.168.220.40:3306/" + dbname;
     }
     public static String getPassword(){
         return USER_PASSWORD;
@@ -58,4 +72,14 @@ public class dbInfo {
         }
         return out;
     }
+//    public static void main(String[] args) throws SQLException {
+//        setDbname("user");
+//        setDburl();
+//        System.out.println(DB_URL);
+//        String cmd = "SELECT * FROM userinfo";
+//        ResultSet rs = dbquery(cmd);
+//        while(rs.next()){
+//            System.out.println(rs.getString("id"));
+//        }
+//    }
 }
