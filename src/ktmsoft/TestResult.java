@@ -47,10 +47,6 @@ public class TestResult extends javax.swing.JFrame {
 
         jLabel3.setText("Group ID");
 
-        jTextField1.setText("jTextField1");
-
-        jTextField2.setText("jTextField2");
-
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},

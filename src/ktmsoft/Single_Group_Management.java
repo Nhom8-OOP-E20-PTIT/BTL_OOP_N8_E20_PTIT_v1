@@ -103,7 +103,7 @@ public class Single_Group_Management extends javax.swing.JDialog {
 
         jButton3.setText("Edit");
 
-        jButton4.setText("Import");
+        jButton4.setText("Distribute");
 
         jLabel8.setText("Group ID");
 
