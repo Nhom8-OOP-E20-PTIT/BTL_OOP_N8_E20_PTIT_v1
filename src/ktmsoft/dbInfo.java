@@ -39,17 +39,6 @@ public class dbInfo {
             ex.printStackTrace();
         }
     }
-    public static boolean dbexec2(String cmd){
-        try{
-            Connection ketnoi = getConnection(DB_URL, USER_NAME, PASSWORD);
-            Statement stmt = ketnoi.createStatement();
-            return stmt.execute(cmd);
-        }catch (SQLException ex){
-            ex.printStackTrace();
-            
-        }
-        return false;
-    }
     public static String getDbname(){
         return DB_NAME;
     }
@@ -57,7 +46,7 @@ public class dbInfo {
         DB_NAME = dbname;
     }
     public static void setDburl(String dbname){
-        DB_URL = "jdbc:mysql://10.170.77.196:3306/" + dbname;
+        DB_URL = "jdbc:mysql://192.168.101.50:3306/" + dbname;
     }
     public static String getPassword(){
         return USER_PASSWORD;

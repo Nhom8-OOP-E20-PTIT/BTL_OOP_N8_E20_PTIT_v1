@@ -5,19 +5,94 @@
  */
 package ktmsoft;
 
-/**
- *
- * @author nguye
- */
+import javax.swing.JOptionPane;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.dbInfo;
+import ktmsoft.Student_Management;
+import ktmsoft.Student_Management.student;
+import ktmsoft.AlgorithmForDistributingGroups;
 public class EncodeAndDecodeTest extends javax.swing.JFrame {
 
-    /**
-     * Creates new form EncodeTest
-     */
+    static class student{
+        private String stu_ID;
+        private String group_ID;
+        private String secret_ID;
+
+        public student(String stu_ID, String group_ID, String secret_ID) {
+            this.stu_ID = stu_ID;
+            this.group_ID = group_ID;
+            this.secret_ID = secret_ID;
+        }
+        
+        
+        public student(String stu_ID, String group_ID) {
+            this.stu_ID = stu_ID;
+            this.group_ID = group_ID;
+        }
+
+        public String getStu_ID() {
+            return stu_ID;
+        }
+
+        public String getGroup_ID() {
+            return group_ID;
+        }
+
+        public String getSecret_ID() {
+            return secret_ID;
+        }
+
+        public void setSecret_ID(String secret_ID) {
+            this.secret_ID = secret_ID;
+        }
+        
+        
+    }
+    DefaultTableModel model;
+    List<String> tableName = new ArrayList<>();
+    ArrayList<student> students = new ArrayList<>();
+    static String DB_NAME = "enrollment";
+    static String DB_NAME_2 = "Test_Info";
     public EncodeAndDecodeTest() {
         initComponents();
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        tableName.clear();
+        model = (DefaultTableModel) jTable1.getModel();
+        getAll();
+        try{
+            String cmd = "SHOW TABLES";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                tableName.add(rs.getString("Tables_in_enrollment"));
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();;
+        }
+        for(String x : tableName){
+            jComboBox1.addItem(x);
+        }
     }
-
+    public void getAll(){
+        model.setRowCount(0);
+        for(student s : students){
+            model.addRow(new Object[]{
+                s.getStu_ID(), s.getGroup_ID(), s.getSecret_ID()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,10 +102,6 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -43,10 +114,6 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setText("Student ID");
-
-        jLabel3.setText("Secret ID");
-
         jButton1.setText("Encode");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,14 +125,15 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
 
         jLabel4.setText("Group ID");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Student ID", "Group ID", "Secret ID"
@@ -75,7 +143,12 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
 
         jLabel5.setText("Encode And Decode Test");
 
-        jButton3.setText("Search");
+        jButton3.setText("Load");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Back to Main Menu");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -91,32 +164,24 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(112, 112, 112)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField2)
-                                    .addComponent(jComboBox1, 0, 125, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(104, 104, 104)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                                .addComponent(jButton2)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
                         .addComponent(jButton4)
                         .addGap(174, 174, 174)
-                        .addComponent(jLabel5)))
+                        .addComponent(jLabel5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(112, 112, 112)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton2))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -130,18 +195,11 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(50, 50, 50)
+                        .addGap(71, 71, 71)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton3)
@@ -153,6 +211,49 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        students.clear();
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        
+        int selected_index = jComboBox1.getSelectedIndex();
+        String group_name = tableName.get(selected_index);
+
+        try{
+            String cmd = "SELECT Stu_ID FROM " + group_name + ";";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String Stu_ID = rs.getString("Stu_ID");
+                String Group_ID = group_name;
+                student st = new student(Stu_ID, Group_ID);
+                students.add(st);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        int sizeOfGroup = students.size();
+        List<Integer> idx = new ArrayList<>();
+        for(int i = 0; i < sizeOfGroup; i++){
+            idx.add(i+1);
+        }
+        Random ran = new Random();
+        for(student i : students){
+            int index = ran.nextInt(idx.size());
+            int n = idx.get(index);
+            String Secret_ID = String.format("SEC%03d", n);
+            i.setSecret_ID(Secret_ID);
+            idx.remove(index);
+        }
+        dbInfo.setDbname(DB_NAME_2);
+        dbInfo.setDburl(DB_NAME_2);
+        for(student i : students){
+            try{
+                String cmd = "INSERT INTO encode VALUES('" + i.stu_ID + "','" + i.group_ID + "','" + i.secret_ID + "');";
+                dbInfo.dbexec(cmd);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        getAll();
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -179,6 +280,35 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
             m.setLocationRelativeTo(null);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        students.clear();
+        dbInfo.setDbname(DB_NAME_2);
+        dbInfo.setDburl(DB_NAME_2);
+        
+        int selected_index = jComboBox1.getSelectedIndex();
+        String group_name = tableName.get(selected_index);
+
+        try{
+            String cmd = "SELECT * FROM encode WHERE Group_ID ='" + group_name + "';" ;
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String Stu_ID = rs.getString("Stu_ID");
+                String Group_ID = group_name;
+                String Secret_ID = rs.getString("Secret_ID");
+                student st = new student(Stu_ID, Group_ID, Secret_ID);
+                students.add(st);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        getAll();        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,13 +352,9 @@ public class EncodeAndDecodeTest extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

@@ -79,6 +79,22 @@ public class Single_Group_Management extends javax.swing.JDialog {
                     e.printStackTrace();
                 }
             }
+        }else if(dbInfo.getRole().equals("le")){
+            for(int i = 1; i <= count; i++){
+                try{
+                    String cmd = "SELECT EXISTS(SELECT * from group" + i +  " WHERE Lec_ID='" + dbInfo.USERNAME +"');";
+//                    System.out.println(cmd);
+                    ResultSet rs = dbInfo.dbquery(cmd);
+                    while(rs.next()){
+                        int b = Integer.parseInt(rs.getString(1));
+                        if(b==1){
+                            tableName.add("group" + i);
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
         for(String x : tableName){
             jComboBox1.addItem(x);
@@ -124,7 +140,7 @@ public class Single_Group_Management extends javax.swing.JDialog {
             jComboBox1.addItem(x);
         }
     }
-     public void getAll(){
+    public void getAll(){
         model.setRowCount(0);
         for(student s : students){
             model.addRow(new Object[]{
@@ -206,7 +222,7 @@ public class Single_Group_Management extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setText("Add");
+        jButton1.setText("Load");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -351,7 +367,6 @@ public class Single_Group_Management extends javax.swing.JDialog {
         dbInfo.setDburl(DB_NAME);
         
         int selected_index = jComboBox1.getSelectedIndex();
-//        String group_name = "group" + selected_index;
         String group_name = tableName.get(selected_index);
         
         
