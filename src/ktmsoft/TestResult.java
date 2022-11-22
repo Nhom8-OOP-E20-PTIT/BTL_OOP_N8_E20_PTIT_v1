@@ -5,19 +5,121 @@
  */
 package ktmsoft;
 
-/**
- *
- * @author nguye
- */
+import javax.swing.JOptionPane;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.dbInfo;
+import ktmsoft.Student_Management;
+import ktmsoft.Student_Management.student;
+import ktmsoft.AlgorithmForDistributingGroups;
 public class TestResult extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TestResult
-     */
+    static class student{
+        private String Stu_ID;
+        private String Course_ID;
+        private String Group_ID;
+        private String Stu_Score;
+
+        public student(String Stu_ID, String Course_ID, String Group_ID, String Stu_Score) {
+            this.Stu_ID = Stu_ID;
+            this.Course_ID = Course_ID;
+            this.Group_ID = Group_ID;
+            this.Stu_Score = Stu_Score;
+        }
+        
+        public student(String Stu_ID, String Group_ID, String Stu_Score) {
+            this.Stu_ID = Stu_ID;
+            this.Group_ID = Group_ID;
+            this.Stu_Score = Stu_Score;
+        }
+
+        public String getStu_ID() {
+            return Stu_ID;
+        }
+
+        public void setStu_ID(String Stu_ID) {
+            this.Stu_ID = Stu_ID;
+        }
+
+        public String getCourse_ID() {
+            return Course_ID;
+        }
+
+        public void setCourse_ID(String Course_ID) {
+            this.Course_ID = Course_ID;
+        }
+
+        public String getGroup_ID() {
+            return Group_ID;
+        }
+
+        public void setGroup_ID(String Group_ID) {
+            this.Group_ID = Group_ID;
+        }
+
+        public String getStu_Score() {
+            return Stu_Score;
+        }
+
+        public void setStu_Score(String Stu_Score) {
+            this.Stu_Score = Stu_Score;
+        }
+
+        
+        
+    }
+    static String DB_NAME = "Test_Info";
+    DefaultTableModel model;
+    ArrayList<student> students = new ArrayList<>();
+    List<String> tableName = new ArrayList<>();    
     public TestResult() {
         initComponents();
+        dbInfo.setDburl(DB_NAME);
+        dbInfo.setDbname(DB_NAME);
+        model = (DefaultTableModel) jTable1.getModel();
+        try{
+            String cmd = "SELECT e.Stu_ID, e.Group_ID, m.Stu_Score FROM encode e, marking m WHERE e.Secret_ID = m.Secret_ID AND e.Group_ID = m.Group_ID;";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String Stu_ID = rs.getString("Stu_ID");
+                String Group_ID = rs.getString("Group_ID");
+                String Stu_Score = rs.getString("Stu_Score");
+                String Course_ID = "";
+                try{
+                    String cmd2 = "SELECT DISTINCT Course_ID FROM enrollment." + Group_ID +";";
+                    ResultSet rs2 = dbInfo.dbquery(cmd2);
+                    while(rs2.next()){
+                        Course_ID = rs2.getString("Course_ID");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                student st = new student(Stu_ID, Course_ID, Group_ID, Stu_Score);
+                students.add(st);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        getAll();
     }
-
+    public void getAll(){
+        model.setRowCount(0);
+        for(student s : students){
+            model.addRow(new Object[]{
+                s.getStu_ID(), s.getCourse_ID(), s.getGroup_ID(), s.getStu_Score()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,6 +141,7 @@ public class TestResult extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -50,10 +153,7 @@ public class TestResult extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Student ID", "Course ID", "Group ID", "Student Score"
@@ -64,8 +164,13 @@ public class TestResult extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("View");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID Ascending", "ID Descending", "Course ID Ascending", "Course ID Descending", "Group ID Ascending", "Group ID Descending", "Score Ascending", "Score Descending" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -78,6 +183,13 @@ public class TestResult extends javax.swing.JFrame {
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Save to DB");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -96,14 +208,16 @@ public class TestResult extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(57, 57, 57)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                            .addComponent(jTextField1)
                             .addComponent(jTextField2)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(146, 146, 146)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                        .addGap(122, 122, 122)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
@@ -135,8 +249,10 @@ public class TestResult extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
-                        .addGap(27, 27, 27)
-                        .addComponent(jButton1)))
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jButton3))))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -144,7 +260,25 @@ public class TestResult extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        // TODO add your handling code here:
+        int selected_index = jComboBox2.getSelectedIndex();
+        if(selected_index == 0){
+            students.sort(Comparator.comparing(student::getStu_ID));
+        }else if(selected_index == 1){
+            students.sort(Comparator.comparing(student::getStu_ID).reversed());
+        }else if(selected_index == 2){
+            students.sort(Comparator.comparing(student::getCourse_ID));
+        }else if(selected_index == 3){
+            students.sort(Comparator.comparing(student::getCourse_ID).reversed());
+        }else if(selected_index == 4){
+            students.sort(Comparator.comparing(student::getGroup_ID));
+        }else if(selected_index == 5){
+            students.sort(Comparator.comparing(student::getGroup_ID).reversed());
+        }else if(selected_index == 6){
+            students.sort(Comparator.comparing(student::getStu_Score));
+        }else if(selected_index == 7){
+            students.sort(Comparator.comparing(student::getStu_Score).reversed());
+        }
+        getAll();        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -170,6 +304,24 @@ public class TestResult extends javax.swing.JFrame {
             m.setLocationRelativeTo(null);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        getAll();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        dbInfo.setDburl(DB_NAME);
+        dbInfo.setDbname(DB_NAME);        
+        for(student i : students){
+            String Stu_ID = i.getStu_ID();
+            String Course_ID = i.getCourse_ID();
+            String Group_ID = i.getGroup_ID();
+            String Student_Score = i.getStu_Score();
+            String cmd = "INSERT INTO result VALUES('" + Stu_ID + "','" + Course_ID + "','" + Group_ID + "','" + Student_Score + "');" ;
+            dbInfo.dbexec(cmd);
+        }
+        JOptionPane.showMessageDialog(null, "Done");
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,6 +361,7 @@ public class TestResult extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;

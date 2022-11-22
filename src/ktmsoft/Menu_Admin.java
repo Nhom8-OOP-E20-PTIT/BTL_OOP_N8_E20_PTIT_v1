@@ -47,7 +47,6 @@ public class Menu_Admin extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
-        jMenuItem13 = new javax.swing.JMenuItem();
 
         jMenu5.setText("jMenu5");
 
@@ -157,14 +156,6 @@ public class Menu_Admin extends javax.swing.JFrame {
         });
         jMenu6.add(jMenuItem12);
 
-        jMenuItem13.setText("Decode Test");
-        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem13ActionPerformed(evt);
-            }
-        });
-        jMenu6.add(jMenuItem13);
-
         jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
@@ -267,14 +258,6 @@ public class Menu_Admin extends javax.swing.JFrame {
         eadt.setLocationRelativeTo(null);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
-    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
-        // TODO add your handling code here:
-        EncodeAndDecodeTest eadt = new EncodeAndDecodeTest();
-        eadt.setVisible(true);
-        this.setVisible(false);
-        eadt.setLocationRelativeTo(null);
-    }//GEN-LAST:event_jMenuItem13ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -321,7 +304,6 @@ public class Menu_Admin extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
