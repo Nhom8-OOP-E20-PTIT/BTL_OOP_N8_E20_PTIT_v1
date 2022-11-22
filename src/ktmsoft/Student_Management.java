@@ -432,10 +432,7 @@ public class Student_Management extends javax.swing.JDialog {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Student_Management.class.getName()).log(Level.SEVERE, null, ex);
         }
-        getAll();
-        
-        
-        
+        getAll();    
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

@@ -4,7 +4,21 @@
  * and open the template in the editor.
  */
 package ktmsoft;
-
+import java.io.*;
+import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import static java.sql.DriverManager.getConnection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.Student_Management.student;
 /**
  *
  * @author nguye
@@ -14,6 +28,54 @@ public class TestManagement extends javax.swing.JFrame {
     /**
      * Creates new form TestManagement
      */
+    private String Course_ID, Group_ID, Test_StartTime, Test_Date, Test_Period,
+            Room_ID, Test_Format, Supervisor_ID;
+
+    public TestManagement(String Course_ID, String Group_ID, String Test_StartTime, String Test_Date, String Test_Period, String Room_ID, String Test_Format, String Supervisor_ID) {
+        this.Course_ID = Course_ID;
+        this.Group_ID = Group_ID;
+        this.Test_StartTime = Test_StartTime;
+        this.Test_Date = Test_Date;
+        this.Test_Period = Test_Period;
+        this.Room_ID = Room_ID;
+        this.Test_Format = Test_Format;
+        this.Supervisor_ID = Supervisor_ID;
+    }
+
+    public String getCourse_ID() {
+        return Course_ID;
+    }
+
+    public String getGroup_ID() {
+        return Group_ID;
+    }
+
+    public String getTest_StartTime() {
+        return Test_StartTime;
+    }
+
+    public String getTest_Date() {
+        return Test_Date;
+    }
+
+    public String getTest_Period() {
+        return Test_Period;
+    }
+
+    public String getRoom_ID() {
+        return Room_ID;
+    }
+
+    public String getTest_Format() {
+        return Test_Format;
+    }
+
+    public String getSupervisor_ID() {
+        return Supervisor_ID;
+    }
+    
+    private ArrayList<TestManagement> list;
+    DefaultTableModel model;
     public TestManagement() {
         initComponents();
         if(dbInfo.getRole().equals("st")){
@@ -23,8 +85,60 @@ public class TestManagement extends javax.swing.JFrame {
             jButton4.setEnabled(false);
             
         }
+        model = (DefaultTableModel) jTable2.getModel();
+        list = ReadAll();
+        getAll();
+        List<String> tableName = new ArrayList<>();
+        /*  get tableName in order to show in jcomboBox
+        try{
+            String cmd = "SHOW TABLES";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                tableName.add(rs.getString("Tables_in_enrollment"));
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();;
+        }
+        for(String x : tableName){
+            jComboBox1.addItem(x);
+        }
+        */
     }
-
+    public ArrayList ReadAll(){
+        ArrayList<TestManagement> result = new ArrayList<>();
+//        dbInfo.setDbname(DB_NAME);
+//        dbInfo.setDburl(DB_NAME);
+        try{
+            String cmd = "SELECT * FROM Test";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                String Course_ID = rs.getString("Course_ID");
+                String Group_ID = rs.getString("Group_ID");
+                String Test_StartTime = rs.getString("Test_StartTime");
+                String Test_Date = rs.getString("Test_Date");
+                String Test_Period = rs.getString("Test_Period");
+                String Room_ID = rs.getString("Room_ID");
+                String Test_Format = rs.getString("Test_Format");
+                String Supervisor_ID = rs.getString("Supervisor_ID");
+                
+                TestManagement test = new TestManagement(Course_ID, Group_ID, Test_StartTime, Test_Date, Test_Period, Room_ID, Test_Format, Supervisor_ID);
+                result.add(test);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return result;
+        
+    }
+    public void getAll(){
+        model.setRowCount(0);
+        for(TestManagement s : list){
+            model.addRow(new Object[]{
+                s.getCourse_ID(), s.getGroup_ID(), s.getTest_StartTime(), s.getTest_Date(), s.getTest_Period(), s.getRoom_ID(), s.getTest_Format(), s.getSupervisor_ID()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,6 +205,18 @@ public class TestManagement extends javax.swing.JFrame {
 
         jLabel8.setText("Supervisor ID");
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField5ActionPerformed(evt);
+            }
+        });
+
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField8ActionPerformed(evt);
@@ -105,18 +231,38 @@ public class TestManagement extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Course ID", "Group ID", "Start Time", "Period", "Date", "Room ID", "Test Format", "Supervisor ID"
+                "Course ID", "Group ID", "Start Time", "Date", "Period", "Room ID", "Test Format", "Supervisor ID"
             }
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jButton1.setText("Add");
+        jButton1.setText("Save");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Delete");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Edit");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Import");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Back to Main Menu");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -260,6 +406,151 @@ public class TestManagement extends javax.swing.JFrame {
             m.setLocationRelativeTo(null);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+//        dbInfo.setDbname(DB_NAME);
+//        dbInfo.setDburl(DB_NAME);
+        String Course_ID = jTextField1.getText();
+        int selected_index = jComboBox1.getSelectedIndex();
+        // String Group_ID = tableName.get(selected_index);
+        String Group_ID = "group1";
+        String Start_Time = jTextField3.getText();
+        String Period = jTextField4.getText();
+        String Date = jTextField5.getText();
+        String Room_ID = jTextField6.getText();
+        String Test_Format = jTextField7.getText();
+        String Supervisor_ID = jTextField8.getText();
+        
+        if(Course_ID == ""){
+            JOptionPane.showMessageDialog(null, "Course ID cannot be empty");
+        }else if(Group_ID == ""){
+            JOptionPane.showMessageDialog(null, "Group ID cannot be empty");
+        }else if(Start_Time == ""){
+            JOptionPane.showMessageDialog(null, "Start Time cannot be empty");
+        }else if(Period == ""){
+            JOptionPane.showMessageDialog(null, "Period cannot be empty");
+        }else if(Date == ""){
+            JOptionPane.showMessageDialog(null, "Date cannot be empty");
+        }else if(Room_ID == ""){
+            JOptionPane.showMessageDialog(null, "Room ID cannot be empty");
+        }else if(Test_Format == ""){
+            JOptionPane.showMessageDialog(null, "Test Format cannot be empty");
+        }else if(Supervisor_ID == ""){
+            JOptionPane.showMessageDialog(null, "Supervisor ID cannot be empty");
+        }                
+        String cmd = "INSERT INTO Test VALUES ('" + Course_ID + "', '" + 
+                Group_ID + "', '" + Start_Time + "', '" + Date + "', '" + 
+                Period + "', '" + Room_ID + "', '" + Test_Format + "', '" + Supervisor_ID + "');"; 
+        dbInfo.dbexec(cmd);
+        TestManagement tm = new TestManagement(Course_ID, Group_ID, Start_Time, Date, Period, Room_ID, Test_Format, Supervisor_ID);
+        list.add(tm);
+        getAll();
+        jTextField1.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");
+        jTextField8.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int del_index = jTable2.getSelectedRow();
+        if(del_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to delete");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to delete");
+        }else{
+            TestManagement st_del = list.get(del_index);
+            list.remove(del_index);
+//            dbInfo.setDbname(DB_NAME);
+//            dbInfo.setDburl(DB_NAME);
+            String cmd = "DELETE FROM Test WHERE Group_ID = '" + st_del.Group_ID + "';";
+            dbInfo.dbexec(cmd);
+            getAll();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        jTextField1.setText("");
+        // lack jComboBox;
+        jTextField3.setText(""); 
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jTextField7.setText("");
+        jTextField8.setText("");
+        int edit_index = jTable2.getSelectedRow();
+        if(edit_index == -1){
+            JOptionPane.showMessageDialog(null, "Please select one line to edit");
+        }else if(list.size() == 0){
+            JOptionPane.showMessageDialog(null, "No data to edit");
+        }else{
+//            dbInfo.setDbname(DB_NAME);
+//            dbInfo.setDburl(DB_NAME);            
+            TestManagement st_edit = list.get(edit_index);
+            list.remove(edit_index);
+            String cmd = "DELETE FROM Test WHERE Group_ID = '" + st_edit.Group_ID + "';";
+            dbInfo.dbexec(cmd);
+            jTextField1.setText(st_edit.Course_ID);
+            // lack jComboBox
+            jTextField3.setText(st_edit.Test_StartTime);
+            jTextField4.setText(st_edit.Test_Date);
+            jTextField5.setText(st_edit.Test_Period);
+            jTextField6.setText(st_edit.Room_ID);
+            jTextField7.setText(st_edit.Test_Format);
+            jTextField8.setText(st_edit.Supervisor_ID);    
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+//        dbInfo.setDbname(DB_NAME);
+//        dbInfo.setDburl(DB_NAME);
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(".CSV file", "csv");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(null);
+        File location = null;
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            location = chooser.getSelectedFile();
+        }
+        
+        try {
+            Scanner sc = new Scanner(location);
+            while(sc.hasNext()){
+                String s = sc.nextLine();
+                String st[] = s.trim().split(",");
+                String Course_ID = st[0];
+                String Group_ID = st[1];
+                String Start_Time = st[2];
+                String Date = st[3];
+                String Period = st[4];
+                String Room_ID = st[5];
+                String Test_Format = st[6];
+                String Supervisor_ID = st[7];
+                
+                String cmd = "INSERT INTO Test VALUES ('" + Course_ID + "', '" + 
+                Group_ID + "', '" + Start_Time + "', '" + Date + "', '" + 
+                Period + "', '" + Room_ID + "', '" + Test_Format + "', '" + Supervisor_ID + "');"; 
+                dbInfo.dbexec(cmd);
+                TestManagement tm = new TestManagement(Course_ID, Group_ID, Start_Time, Date, Period, Room_ID, Test_Format, Supervisor_ID);
+                list.add(tm);              
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Student_Management.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        getAll(); 
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
