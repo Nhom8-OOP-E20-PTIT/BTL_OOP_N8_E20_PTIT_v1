@@ -22,13 +22,13 @@ public class dbInfo {
     public static String USERNAME = "";
     public static String USER_PASSWORD = "";
     public static String ROLE = "";
-    private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=Test_Info;" + "integratedSecurity=false;" + "encrypt=true;" + "trustServerCertificate=true";
-    private static String USER_NAME = "sa";
-    private static String PASSWORD = "123";
+//    private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=Test_Info;" + "integratedSecurity=false;" + "encrypt=true;" + "trustServerCertificate=true";
+//    private static String USER_NAME = "sa";
+//    private static String PASSWORD = "123";
     private static String DB_NAME = "";
-//    private static String DB_URL = "";
-//    private static String USER_NAME = "ktm";
-//    private static String PASSWORD = "123456@abc";
+    private static String DB_URL = "";
+    private static String USER_NAME = "ktm";
+    private static String PASSWORD = "123456@abc";
     public static void dbexec(String cmd){
         try{
             Connection ketnoi = getConnection(DB_URL, USER_NAME, PASSWORD);

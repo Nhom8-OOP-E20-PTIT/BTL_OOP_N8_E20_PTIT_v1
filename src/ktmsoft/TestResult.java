@@ -111,6 +111,62 @@ public class TestResult extends javax.swing.JFrame {
             e.printStackTrace();
         }
         getAll();
+        /* add tableName
+        //        dbInfo.setDbname(DB_NAME);
+//        dbInfo.setDburl(DB_NAME);
+        tableName.clear();
+        int count = 0;
+        try{
+            String cmd = "SHOW TABLES";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                count++;
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();;
+        }
+        if(dbInfo.getRole().equals("ad")){
+            for(int i = 1; i <= count; i++){
+                tableName.add("group" + i);
+            }
+        }else if(dbInfo.getRole().equals("st")){
+            for(int i = 1; i <= count; i++){
+                try{
+                    String cmd = "SELECT EXISTS(SELECT * from group" + i +  " WHERE stu_ID='" + dbInfo.USERNAME +"');";
+//                    System.out.println(cmd);
+                    ResultSet rs = dbInfo.dbquery(cmd);
+                    while(rs.next()){
+                        int b = Integer.parseInt(rs.getString(1));
+                        if(b==1){
+                            tableName.add("group" + i);
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }else if(dbInfo.getRole().equals("le")){
+            for(int i = 1; i <= count; i++){
+                try{
+                    String cmd = "SELECT EXISTS(SELECT * from group" + i +  " WHERE Lec_ID='" + dbInfo.USERNAME +"');";
+//                    System.out.println(cmd);
+                    ResultSet rs = dbInfo.dbquery(cmd);
+                    while(rs.next()){
+                        int b = Integer.parseInt(rs.getString(1));
+                        if(b==1){
+                            tableName.add("group" + i);
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        for(String x : tableName){
+            jComboBox1.addItem(x);
+        }
+        */
     }
     public void getAll(){
         model.setRowCount(0);
@@ -307,6 +363,7 @@ public class TestResult extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         getAll();
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
