@@ -36,7 +36,6 @@ public class Menu_Supervisor extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem11 = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
 
         jMenu5.setText("jMenu5");
 
@@ -54,6 +53,11 @@ public class Menu_Supervisor extends javax.swing.JFrame {
         jMenu1.add(jMenuItem1);
 
         jMenuItem3.setText("Log Out");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
         jMenu1.add(jSeparator1);
 
@@ -70,10 +74,12 @@ public class Menu_Supervisor extends javax.swing.JFrame {
         jMenu6.setText("Examination");
 
         jMenuItem11.setText("Test Management");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
         jMenu6.add(jMenuItem11);
-
-        jMenuItem14.setText("Test Info");
-        jMenu6.add(jMenuItem14);
 
         jMenuBar1.add(jMenu6);
 
@@ -102,6 +108,20 @@ public class Menu_Supervisor extends javax.swing.JFrame {
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         System.exit(0);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        Login lg = new Login();
+        lg.setVisible(true);
+        this.setVisible(false);
+        lg.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        TestManagement tm = new TestManagement();
+        tm.setVisible(true);
+        this.setVisible(false);
+        tm.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,7 +166,6 @@ public class Menu_Supervisor extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu.Separator jSeparator1;

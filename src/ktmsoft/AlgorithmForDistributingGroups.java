@@ -64,6 +64,7 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,6 +97,13 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
 
         jLabel3.setText("Group Distribution");
 
+        jButton2.setText("Back to Main Menu");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -119,16 +127,20 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
                         .addGap(84, 84, 84)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(348, 348, 348)
+                        .addContainerGap()
+                        .addComponent(jButton2)
+                        .addGap(245, 245, 245)
                         .addComponent(jLabel3)))
                 .addContainerGap(220, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel3)
-                .addGap(41, 41, 41)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton2))
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -223,6 +235,30 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.setVisible(false);
+        if(dbInfo.getRole().equals("ad")){
+            Menu_Admin m = new Menu_Admin();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("le")){
+            Menu_Lecturer m = new Menu_Lecturer();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("st")){
+            Menu_Student m = new Menu_Student();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("su")){
+            Menu_Supervisor m = new Menu_Supervisor();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -260,6 +296,7 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

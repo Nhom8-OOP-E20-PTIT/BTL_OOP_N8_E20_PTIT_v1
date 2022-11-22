@@ -21,6 +21,7 @@ import java.sql.Statement;
 public class dbInfo {
     public static String USERNAME = "";
     public static String USER_PASSWORD = "";
+    public static String ROLE = "";
 //    private static String DB_URL = "jdbc:sqlserver://localhost:1433;" + "databaseName=SinhVien;" + "integratedSecurity=false;" + "encrypt=true;" + "trustServerCertificate=true";
 //    private static String USER_NAME = "sa";
 //    private static String PASSWORD = "123";
@@ -38,6 +39,17 @@ public class dbInfo {
             ex.printStackTrace();
         }
     }
+    public static boolean dbexec2(String cmd){
+        try{
+            Connection ketnoi = getConnection(DB_URL, USER_NAME, PASSWORD);
+            Statement stmt = ketnoi.createStatement();
+            return stmt.execute(cmd);
+        }catch (SQLException ex){
+            ex.printStackTrace();
+            
+        }
+        return false;
+    }
     public static String getDbname(){
         return DB_NAME;
     }
@@ -45,7 +57,7 @@ public class dbInfo {
         DB_NAME = dbname;
     }
     public static void setDburl(String dbname){
-        DB_URL = "jdbc:mysql://192.168.220.40:3306/" + dbname;
+        DB_URL = "jdbc:mysql://10.170.77.196:3306/" + dbname;
     }
     public static String getPassword(){
         return USER_PASSWORD;
@@ -58,6 +70,12 @@ public class dbInfo {
     }
     public static void setUsername(String userName){
         USERNAME = userName;
+    }
+    public static String getRole(){
+        return ROLE;
+    }
+    public static void setRole(String newRole){
+        dbInfo.ROLE = newRole;
     }
     public static ResultSet dbquery(String cmd){
         ResultSet out;

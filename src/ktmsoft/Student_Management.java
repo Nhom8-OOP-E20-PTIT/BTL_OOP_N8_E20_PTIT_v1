@@ -28,6 +28,10 @@ public class Student_Management extends javax.swing.JDialog {
         private String stu_id;
         private String stu_name;
         private String dept_id;
+        public student(String stu_id, String stu_name){
+            this.stu_id = stu_id;
+            this.stu_name = stu_name;
+        }
         public student(String stu_id, String stu_name, String dept_id){
             this.stu_id = stu_id;
             this.stu_name = stu_name;
@@ -45,7 +49,6 @@ public class Student_Management extends javax.swing.JDialog {
         public String getDept_id() {
             return dept_id;
         }
-        
     }
     
     private ArrayList<student> list;
@@ -59,6 +62,13 @@ public class Student_Management extends javax.swing.JDialog {
         model = (DefaultTableModel) jTable1.getModel();
         getAll();
     }
+    public Student_Management(){
+        list = ReadAll();
+        initComponents();
+        model = (DefaultTableModel) jTable1.getModel();
+        getAll();
+    }
+
     
     public ArrayList ReadAll(){
         ArrayList<student> result = new ArrayList<>();
@@ -115,6 +125,7 @@ public class Student_Management extends javax.swing.JDialog {
         jButton4 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -195,6 +206,13 @@ public class Student_Management extends javax.swing.JDialog {
 
         jLabel2.setText("Sort By");
 
+        jButton5.setText("Back to Main Menu");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -210,7 +228,7 @@ public class Student_Management extends javax.swing.JDialog {
                                 .addGap(94, 94, 94))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -231,15 +249,22 @@ public class Student_Management extends javax.swing.JDialog {
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
                 .addGap(171, 171, 171))
             .addGroup(layout.createSequentialGroup()
-                .addGap(372, 372, 372)
+                .addContainerGap()
+                .addComponent(jButton5)
+                .addGap(269, 269, 269)
                 .addComponent(jLabel1)
-                .addGap(153, 153, 153))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jButton5)))
                 .addGap(75, 75, 75)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -260,7 +285,7 @@ public class Student_Management extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -413,6 +438,31 @@ public class Student_Management extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        if(dbInfo.getRole().equals("ad")){
+            Menu_Admin m = new Menu_Admin();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("le")){
+            Menu_Lecturer m = new Menu_Lecturer();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("st")){
+            Menu_Student m = new Menu_Student();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+        else if(dbInfo.getRole().equals("su")){
+            Menu_Supervisor m = new Menu_Supervisor();
+            m.setVisible(true);
+            m.setLocationRelativeTo(null);
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -460,6 +510,7 @@ public class Student_Management extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
