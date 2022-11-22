@@ -7,12 +7,39 @@ package ktmsoft;
 
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author nguye
- */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import ktmsoft.dbInfo;
 public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
-
+    static String DB_NAME = "enrollment";
+    static String DB_NAME_2 = "info";
+    
+    public static int Find_Index(){
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        List<String> tableName = new ArrayList<>();
+        try{
+            String cmd = "SHOW TABLES";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                tableName.add(rs.getString("Tables_in_enrollment"));
+            }
+            
+        }catch(Exception e){
+            e.printStackTrace();;
+        }
+        return tableName.size();
+        
+    }
     /**
      * Creates new form AlgorithmForDistributingGroups
      */
@@ -129,9 +156,70 @@ public class AlgorithmForDistributingGroups extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        for(int i = 1; i <= 3; i++){
-            String string = "Đã tạo thành công nhóm thứ " + i + "\n";
-            jTextArea1.append(string);
+
+        dbInfo.setDbname(DB_NAME_2);
+        dbInfo.setDburl(DB_NAME_2);
+        String course_id = jTextField1.getText();
+        int sizeOfEachGroup = Integer.parseInt(jTextField2.getText());
+        String dept = "";
+        try{
+            String cmd = "SELECT Dept_ID FROM course WHERE Course_ID = '" + course_id + "';";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                dept = rs.getString("Dept_ID");
+            }
+            
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        // System.out.println(dept);
+        List<String> all_studentId = new ArrayList<>();
+        try{
+            String cmd = "SELECT Stu_ID FROM student WHERE Dept_ID = '" + dept +"';";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                all_studentId.add(rs.getString("Stu_ID"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<String> lecturer = new ArrayList<>();
+        try{
+            String cmd = "SELECT Lec_ID FROM lecturer WHERE Dept_ID = '" + dept +"';";
+            ResultSet rs = dbInfo.dbquery(cmd);
+            while(rs.next()){
+                lecturer.add(rs.getString("Lec_ID"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }        
+        int sizeOfTotal = all_studentId.size();
+        int numOfLecturer = lecturer.size();
+        int index = 0, index2 = 0, index3 = -1, stt = Find_Index()+1;
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        while(index < sizeOfTotal){
+            String group_name = "group" + stt;
+            String cmd = "CREATE TABLE "+ group_name + " (Stu_ID VARCHAR(255) PRIMARY KEY, Course_ID VARCHAR(255), Lec_ID VARCHAR(255), Group_ID VARCHAR(255));";
+            dbInfo.dbexec(cmd);
+            String Lec_ID = "";
+            if(index3 < numOfLecturer - 1){
+                index3++;
+            }else{
+                index3 = 0;
+            }
+            Lec_ID = lecturer.get(index3);
+            while(index2 < sizeOfEachGroup){
+                if(index < sizeOfTotal){
+                    String cmd2 = "INSERT INTO " + group_name +" VALUES('"+all_studentId.get(index)+"','"+course_id+"','"+ Lec_ID +"','"+ group_name +"');";
+                    System.out.println(cmd2);
+                    dbInfo.dbexec(cmd2);
+                }
+                index++;
+                index2++;
+            }
+            index2 = 0;
+            stt++;
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

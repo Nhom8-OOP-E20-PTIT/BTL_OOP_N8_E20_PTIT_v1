@@ -45,7 +45,7 @@ public class dbInfo {
         DB_NAME = dbname;
     }
     public static void setDburl(String dbname){
-        DB_URL = "jdbc:mysql://192.168.101.50:3306/" + dbname;
+        DB_URL = "jdbc:mysql://192.168.220.40:3306/" + dbname;
     }
     public static String getPassword(){
         return USER_PASSWORD;
