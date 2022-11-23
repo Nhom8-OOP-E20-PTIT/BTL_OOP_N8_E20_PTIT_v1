@@ -378,8 +378,10 @@ public class MarkTheTest extends javax.swing.JFrame {
         dbInfo.setDburl(DB_NAME_2);
         students.clear();
         model.setRowCount(0);
+        int selected_index = jComboBox1.getSelectedIndex();
+        String group_name = tableName.get(selected_index);
         try{
-            String cmd = "SELECT * FROM marking";
+            String cmd = "SELECT * FROM marking WHERE Group_ID = '" + group_name + "';";
             ResultSet rs = dbInfo.dbquery(cmd);
             while(rs.next()){
                 String Group_ID = rs.getString("Group_ID");

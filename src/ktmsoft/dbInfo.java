@@ -46,7 +46,7 @@ public class dbInfo {
         DB_NAME = dbname;
     }
     public static void setDburl(String dbname){
-        DB_URL = "jdbc:mysql://192.168.101.50:3306/" + dbname;
+        DB_URL = "jdbc:mysql://10.170.77.196:3306/" + dbname;
     }
     public static String getPassword(){
         return USER_PASSWORD;
@@ -67,7 +67,7 @@ public class dbInfo {
         dbInfo.ROLE = newRole;
     }
     public static ResultSet dbquery(String cmd){
-        ResultSet out;
+        ResultSet out = null;
         try{
             Connection ketnoi = getConnection(DB_URL, USER_NAME, PASSWORD);
             Statement stmt = ketnoi.createStatement();

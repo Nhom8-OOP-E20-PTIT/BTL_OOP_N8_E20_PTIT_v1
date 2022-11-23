@@ -22,6 +22,7 @@ import ktmsoft.dbInfo;
 import ktmsoft.Student_Management;
 import ktmsoft.Student_Management.student;
 import ktmsoft.AlgorithmForDistributingGroups;
+import static ktmsoft.MarkTheTest.DB_NAME_2;
 public class TestResult extends javax.swing.JFrame {
 
     static class student{
@@ -79,8 +80,10 @@ public class TestResult extends javax.swing.JFrame {
         
     }
     static String DB_NAME = "Test_Info";
+    static String DB_NAME2 = "enrollment";
     DefaultTableModel model;
     ArrayList<student> students = new ArrayList<>();
+    ArrayList<student> filter = new ArrayList<>();
     List<String> tableName = new ArrayList<>();    
     public TestResult() {
         initComponents();
@@ -110,10 +113,9 @@ public class TestResult extends javax.swing.JFrame {
         }catch (Exception e){
             e.printStackTrace();
         }
-        getAll();
-        /* add tableName
-        //        dbInfo.setDbname(DB_NAME);
-//        dbInfo.setDburl(DB_NAME);
+         // add tableName
+        dbInfo.setDbname(DB_NAME2);
+        dbInfo.setDburl(DB_NAME2);
         tableName.clear();
         int count = 0;
         try{
@@ -166,11 +168,18 @@ public class TestResult extends javax.swing.JFrame {
         for(String x : tableName){
             jComboBox1.addItem(x);
         }
-        */
     }
     public void getAll(){
         model.setRowCount(0);
         for(student s : students){
+            model.addRow(new Object[]{
+                s.getStu_ID(), s.getCourse_ID(), s.getGroup_ID(), s.getStu_Score()
+            });
+        }
+    }
+    public void getAll2(ArrayList<student> arr){
+        model.setRowCount(0);
+        for(student s : arr){
             model.addRow(new Object[]{
                 s.getStu_ID(), s.getCourse_ID(), s.getGroup_ID(), s.getStu_Score()
             });
@@ -216,8 +225,6 @@ public class TestResult extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("View");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -362,14 +369,25 @@ public class TestResult extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        getAll();
+        dbInfo.setDbname(DB_NAME);
+        dbInfo.setDburl(DB_NAME);
+        filter.clear();
+        model.setRowCount(0);
+        int selected_index = jComboBox1.getSelectedIndex();
+        String group_name = tableName.get(selected_index);
+        for(student i : students){
+            if(i.getGroup_ID().equals(group_name)){
+                filter.add(i);
+            }
+        }
+        getAll2(filter);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         dbInfo.setDburl(DB_NAME);
         dbInfo.setDbname(DB_NAME);        
-        for(student i : students){
+        for(student i : filter){
             String Stu_ID = i.getStu_ID();
             String Course_ID = i.getCourse_ID();
             String Group_ID = i.getGroup_ID();

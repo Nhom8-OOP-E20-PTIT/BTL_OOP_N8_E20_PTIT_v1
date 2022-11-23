@@ -24,6 +24,8 @@ import ktmsoft.Student_Management.student;
  * @author nguye
  */
 public class TestManagement extends javax.swing.JFrame {
+    static String DB_NAME = "enrollment";
+    static String DB_NAME2 = "Test_Info";
 
     /**
      * Creates new form TestManagement
@@ -78,6 +80,7 @@ public class TestManagement extends javax.swing.JFrame {
     DefaultTableModel model;
     public TestManagement() {
         initComponents();
+        
         if(dbInfo.getRole().equals("st")){
             jButton1.setEnabled(false);
             jButton2.setEnabled(false);
@@ -89,8 +92,10 @@ public class TestManagement extends javax.swing.JFrame {
         list = ReadAll();
         getAll();
         List<String> tableName = new ArrayList<>();
-        /*  get tableName in order to show in jcomboBox
+        
         try{
+            dbInfo.setDbname(DB_NAME);
+            dbInfo.setDburl(DB_NAME);
             String cmd = "SHOW TABLES";
             ResultSet rs = dbInfo.dbquery(cmd);
             while(rs.next()){
@@ -103,12 +108,11 @@ public class TestManagement extends javax.swing.JFrame {
         for(String x : tableName){
             jComboBox1.addItem(x);
         }
-        */
     }
     public ArrayList ReadAll(){
         ArrayList<TestManagement> result = new ArrayList<>();
-//        dbInfo.setDbname(DB_NAME);
-//        dbInfo.setDburl(DB_NAME);
+        dbInfo.setDbname(DB_NAME2);
+        dbInfo.setDburl(DB_NAME2);
         try{
             String cmd = "SELECT * FROM Test";
             ResultSet rs = dbInfo.dbquery(cmd);
@@ -271,8 +275,6 @@ public class TestManagement extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -409,8 +411,8 @@ public class TestManagement extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-//        dbInfo.setDbname(DB_NAME);
-//        dbInfo.setDburl(DB_NAME);
+        dbInfo.setDbname(DB_NAME2);
+        dbInfo.setDburl(DB_NAME2);
         String Course_ID = jTextField1.getText();
         int selected_index = jComboBox1.getSelectedIndex();
         // String Group_ID = tableName.get(selected_index);
@@ -472,8 +474,8 @@ public class TestManagement extends javax.swing.JFrame {
         }else{
             TestManagement st_del = list.get(del_index);
             list.remove(del_index);
-//            dbInfo.setDbname(DB_NAME);
-//            dbInfo.setDburl(DB_NAME);
+            dbInfo.setDbname(DB_NAME2);
+            dbInfo.setDburl(DB_NAME2);
             String cmd = "DELETE FROM Test WHERE Group_ID = '" + st_del.Group_ID + "';";
             dbInfo.dbexec(cmd);
             getAll();
@@ -495,8 +497,8 @@ public class TestManagement extends javax.swing.JFrame {
         }else if(list.size() == 0){
             JOptionPane.showMessageDialog(null, "No data to edit");
         }else{
-//            dbInfo.setDbname(DB_NAME);
-//            dbInfo.setDburl(DB_NAME);            
+            dbInfo.setDbname(DB_NAME2);
+            dbInfo.setDburl(DB_NAME2);            
             TestManagement st_edit = list.get(edit_index);
             list.remove(edit_index);
             String cmd = "DELETE FROM Test WHERE Group_ID = '" + st_edit.Group_ID + "';";
@@ -504,8 +506,8 @@ public class TestManagement extends javax.swing.JFrame {
             jTextField1.setText(st_edit.Course_ID);
             // lack jComboBox
             jTextField3.setText(st_edit.Test_StartTime);
-            jTextField4.setText(st_edit.Test_Date);
-            jTextField5.setText(st_edit.Test_Period);
+            jTextField4.setText(st_edit.Test_Period);
+            jTextField5.setText(st_edit.Test_Date);
             jTextField6.setText(st_edit.Room_ID);
             jTextField7.setText(st_edit.Test_Format);
             jTextField8.setText(st_edit.Supervisor_ID);    
@@ -514,8 +516,8 @@ public class TestManagement extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-//        dbInfo.setDbname(DB_NAME);
-//        dbInfo.setDburl(DB_NAME);
+        dbInfo.setDbname(DB_NAME2);
+        dbInfo.setDburl(DB_NAME2);
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(".CSV file", "csv");
         chooser.setFileFilter(filter);

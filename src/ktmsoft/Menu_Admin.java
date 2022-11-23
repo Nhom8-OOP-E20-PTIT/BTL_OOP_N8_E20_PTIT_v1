@@ -155,6 +155,11 @@ public class Menu_Admin extends javax.swing.JFrame {
         jMenu6.add(jMenuItem11);
 
         jMenuItem2.setText("Test Result");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu6.add(jMenuItem2);
 
         jMenuItem12.setText("Encode Test");
@@ -274,6 +279,14 @@ public class Menu_Admin extends javax.swing.JFrame {
         this.setVisible(false);
         tr.setLocationRelativeTo(null);
     }//GEN-LAST:event_jMenu6ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        TestResult tr = new TestResult();
+        this.setVisible(false);
+        tr.setVisible(true);
+        tr.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
